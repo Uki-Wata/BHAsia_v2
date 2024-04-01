@@ -1,0 +1,60 @@
+digraph "AWS E-commerce Site Architecture" {
+	graph [fontcolor="#2D3436" fontname="Sans-Serif" fontsize=15 label="AWS E-commerce Site Architecture" nodesep=0.60 pad=2.0 rankdir=TB ranksep=0.75 splines=ortho]
+	node [fixedsize=true fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13 height=1.4 imagescale=true labelloc=b shape=box style=rounded width=1.4]
+	edge [color="#7B8894"]
+	subgraph "cluster_User Interface" {
+		graph [bgcolor="#E5F5FD" fontname="Sans-Serif" fontsize=12 label="User Interface" labeljust=l pencolor="#AEB6BE" rankdir=LR shape=box style=rounded]
+		ee946765c798492b9acd5a4109abfe7b [label="Host static content" height=1.9 image="/Users/koki/anaconda3/lib/python3.11/site-packages/resources/aws/storage/simple-storage-service-s3.png" shape=none]
+		ed24c8fea7ff412ca4a18727522cb295 [label="Deliver content globally" height=1.9 image="/Users/koki/anaconda3/lib/python3.11/site-packages/resources/aws/network/cloudfront.png" shape=none]
+	}
+	"7a8cd46feca64e0ca1fd4c4667b0c536" -> "7c8771df53eb4bb8a5973c72984ac0b2" [dir=forward fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13]
+	ab5088303d4745568b2ac7d5227a536a -> "7c8771df53eb4bb8a5973c72984ac0b2" [dir=forward fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13]
+	subgraph "cluster_Application Layer" {
+		graph [bgcolor="#E5F5FD" fontname="Sans-Serif" fontsize=12 label="Application Layer" labeljust=l pencolor="#AEB6BE" rankdir=LR shape=box style=rounded]
+		"7a8cd46feca64e0ca1fd4c4667b0c536" [label="Serverless Backend" height=1.9 image="/Users/koki/anaconda3/lib/python3.11/site-packages/resources/aws/compute/lambda.png" shape=none]
+		"7c8771df53eb4bb8a5973c72984ac0b2" [label="API Gateway" height=1.9 image="/Users/koki/anaconda3/lib/python3.11/site-packages/resources/aws/network/api-gateway.png" shape=none]
+		ab5088303d4745568b2ac7d5227a536a [label="Application Server" height=1.9 image="/Users/koki/anaconda3/lib/python3.11/site-packages/resources/aws/compute/ec2.png" shape=none]
+	}
+	subgraph "cluster_Data Layer" {
+		graph [bgcolor="#E5F5FD" fontname="Sans-Serif" fontsize=12 label="Data Layer" labeljust=l pencolor="#AEB6BE" rankdir=LR shape=box style=rounded]
+		"4fd18bbd485941e69d87c41a2fada721" [label="Relational Data" height=1.9 image="/Users/koki/anaconda3/lib/python3.11/site-packages/resources/aws/database/rds.png" shape=none]
+		"3569fca3121247639bab75618e911724" [label="NoSQL Data" height=1.9 image="/Users/koki/anaconda3/lib/python3.11/site-packages/resources/aws/database/dynamodb.png" shape=none]
+	}
+	subgraph "cluster_Authentication & Authorization" {
+		graph [bgcolor="#E5F5FD" fontname="Sans-Serif" fontsize=12 label="Authentication & Authorization" labeljust=l pencolor="#AEB6BE" rankdir=LR shape=box style=rounded]
+		"79b589e561a94bc2841c10802f93cccd" [label="User Management" height=1.9 image="/Users/koki/anaconda3/lib/python3.11/site-packages/resources/aws/security/cognito.png" shape=none]
+	}
+	subgraph cluster_Networking {
+		graph [bgcolor="#E5F5FD" fontname="Sans-Serif" fontsize=12 label=Networking labeljust=l pencolor="#AEB6BE" rankdir=LR shape=box style=rounded]
+		"95b0014fa5734e3fbcafabb60ae14ece" [label=DNS height=1.9 image="/Users/koki/anaconda3/lib/python3.11/site-packages/resources/aws/network/route-53.png" shape=none]
+		"53f19191e31a48d089f798b7430e5e71" [label="Load Balancer" height=1.9 image="/Users/koki/anaconda3/lib/python3.11/site-packages/resources/aws/network/elastic-load-balancing.png" shape=none]
+	}
+	subgraph "cluster_Security & Monitoring" {
+		graph [bgcolor="#E5F5FD" fontname="Sans-Serif" fontsize=12 label="Security & Monitoring" labeljust=l pencolor="#AEB6BE" rankdir=LR shape=box style=rounded]
+		cb0a73ad0a36459eac147b98c22d27f8 [label="Web Application Firewall" height=1.9 image="/Users/koki/anaconda3/lib/python3.11/site-packages/resources/aws/security/waf.png" shape=none]
+		dfcb4062b86b4772aa1eeac62a67dec3 [label=Monitoring height=1.9 image="/Users/koki/anaconda3/lib/python3.11/site-packages/resources/aws/management/cloudwatch.png" shape=none]
+	}
+	subgraph "cluster_Communication & Notification" {
+		graph [bgcolor="#E5F5FD" fontname="Sans-Serif" fontsize=12 label="Communication & Notification" labeljust=l pencolor="#AEB6BE" rankdir=LR shape=box style=rounded]
+		ba414e46048c4506b409e49d0e1dacd1 [label=Notifications height=1.9 image="/Users/koki/anaconda3/lib/python3.11/site-packages/resources/aws/integration/simple-notification-service-sns.png" shape=none]
+		f0efa89923164236bdb392286c0e1eaf [label="Email Service" height=1.9 image="/Users/koki/anaconda3/lib/python3.11/site-packages/resources/aws/engagement/simple-email-service-ses.png" shape=none]
+	}
+	subgraph "cluster_Storage & CDN" {
+		graph [bgcolor="#E5F5FD" fontname="Sans-Serif" fontsize=12 label="Storage & CDN" labeljust=l pencolor="#AEB6BE" rankdir=LR shape=box style=rounded]
+		"4d79c2ba3b874d2cb163e7370db86d26" [label="Store & Deliver Content" height=1.9 image="/Users/koki/anaconda3/lib/python3.11/site-packages/resources/aws/storage/simple-storage-service-s3.png" shape=none]
+		"6d6de44ad1c049a2a7cd702bf0ae23ce" [label=CDN height=1.9 image="/Users/koki/anaconda3/lib/python3.11/site-packages/resources/aws/network/cloudfront.png" shape=none]
+	}
+	ee946765c798492b9acd5a4109abfe7b -> ed24c8fea7ff412ca4a18727522cb295 [dir=forward fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13]
+	ed24c8fea7ff412ca4a18727522cb295 -> "53f19191e31a48d089f798b7430e5e71" [dir=forward fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13]
+	"53f19191e31a48d089f798b7430e5e71" -> ab5088303d4745568b2ac7d5227a536a [dir=forward fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13]
+	"4d79c2ba3b874d2cb163e7370db86d26" -> "6d6de44ad1c049a2a7cd702bf0ae23ce" [dir=forward fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13]
+	"7a8cd46feca64e0ca1fd4c4667b0c536" -> "3569fca3121247639bab75618e911724" [dir=forward fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13]
+	ab5088303d4745568b2ac7d5227a536a -> "4fd18bbd485941e69d87c41a2fada721" [dir=forward fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13]
+	"95b0014fa5734e3fbcafabb60ae14ece" -> "53f19191e31a48d089f798b7430e5e71" [dir=forward fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13]
+	"7c8771df53eb4bb8a5973c72984ac0b2" -> "7a8cd46feca64e0ca1fd4c4667b0c536" [dir=forward fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13]
+	"79b589e561a94bc2841c10802f93cccd" -> "7c8771df53eb4bb8a5973c72984ac0b2" [dir=forward fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13]
+	ba414e46048c4506b409e49d0e1dacd1 -> f0efa89923164236bdb392286c0e1eaf [dir=forward fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13]
+	ab5088303d4745568b2ac7d5227a536a -> dfcb4062b86b4772aa1eeac62a67dec3 [dir=forward fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13]
+	"7a8cd46feca64e0ca1fd4c4667b0c536" -> dfcb4062b86b4772aa1eeac62a67dec3 [dir=forward fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13]
+	cb0a73ad0a36459eac147b98c22d27f8 -> "53f19191e31a48d089f798b7430e5e71" [dir=forward fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13]
+}
