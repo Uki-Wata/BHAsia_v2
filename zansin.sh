@@ -1,5 +1,23 @@
 #!/bin/bash
 
+read -p "Enter your input: " user_input
+
+# パスワード変更コマンドを実行
+echo "zansin:$user_input" | chpasswd
+
+# パスワード変更後のメッセージを表示
+echo "Control Serber's Password changed successfully!"
+
+# 以下のコードを実行するようにする
+sudo apt install ansible
+git clone https://github.com/zansin-sec/zansin.git
+cd zanshin/playbook
+# inventory.iniの編集
+read -p "Enter your input: " user_input
+echo "zansin:$user_input" | chpasswd
+echo "Control Server's Password changed successfully!"
+ansible-playbook -i inventory.ini game-servers.yml
+
 # 色定義
 RED="\033[31m"
 GREEN="\033[32m"
