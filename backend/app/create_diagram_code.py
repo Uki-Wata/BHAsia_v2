@@ -1,43 +1,70 @@
 from itertools import chain
+import json
 from langchain_core.output_parsers import StrOutputParser
-from langchain_core.runnables import RunnableLambda, RunnablePassthrough
-from langchain_openai import ChatOpenAI, OpenAIEmbeddings
-from langchain_community.vectorstores import Chroma
+from langchain_core.output_parsers import JsonOutputParser
 from langchain_core.prompts import ChatPromptTemplate
+from langchain_openai import ChatOpenAI
 
-template = """Must return markdown format.\nPlease tell me more about the AWS services you should use when building {input}.\n"""
+def generate_aws_service_description(input_text):
+    """
+    Generate a description of AWS services based on the input text.
 
-model = ChatOpenAI(model="gpt-4-0125-preview", temperature=1.0, max_tokens=1000) # must use gpt-4-0125-preview
-output_parser = StrOutputParser()
+    Args:
+        input_text (str): Input text to generate the AWS service description.
 
-prompt = ChatPromptTemplate.from_template(template)
-chain_service = prompt | model | output_parser
+    Returns:
+        tuple: A tuple containing the description of AWS services in markdown format
+               and the result of json_chain.
+    """
+    model = ChatOpenAI(model="gpt-3.5-turbo", temperature=1.0, max_tokens=1000)
+    description_output_parser = StrOutputParser()
+    description_prompt = ChatPromptTemplate.from_template("""Must return markdown format.\nPlease tell me more about the AWS services you should use when building {input}.\n""")
+    description_chain = description_prompt | model | description_output_parser
+    description = description_chain.invoke({"input": input_text})
 
-# chain_service_results = chain_service.invoke({"input": "Simple Web Application"})
+    json_output_parser = JsonOutputParser()
+    json_prompt = ChatPromptTemplate(
+        template="Answer the user query.\n{format_instructions}\n{query}\n",
+        input_variables=["description"],
+        partial_variables={"format_instructions": json_output_parser.get_format_instructions()}
+    )
+    json_chain = json_prompt | model | json_output_parser
+    json_result = json_chain.invoke({"description": description})
 
-prompt1 = ChatPromptTemplate.from_template("""Express what you receive with {input} in python diagrams. There is no need to run it. Please do not return anything other than python code.""")
+    return description, json_result
 
-chain1 = (
-    {"input": chain_service }
-    | prompt1
-    | model
-    | StrOutputParser()
-)
+def generate_python_code(input_text):
+    """
+    Generate Python code based on the input text.
 
-print(chain1.invoke({"input": "Simple Web Application"}))
+    Args:
+        input_text (str): Input text to generate the Python code.
 
+    Returns:
+        str: Python code.
+    """
+    model = ChatOpenAI(model="gpt-4-0125-preview", temperature=1.0, max_tokens=1000)
+    output_parser = StrOutputParser()
+    prompt = ChatPromptTemplate.from_template("""Express what you receive with {input} in python diagrams. There is no need to run it. Please do not return anything other than python code.""")
+    chain = ({"input": input_text} | prompt | model | output_parser)
+    return chain.invoke({"input": "Simple Web Application"})
 
-prompt2 = ChatPromptTemplate.from_template("""Must return markdown format.\n Please tell me what security precautions I need to take when using the services below.\n {input} """)
+def generate_security_precautions(input_text, service_description):
+    """
+    Generate a description of security precautions based on the input text and AWS service description.
 
-chain2 = (
-    {"input": chain_service }
-    | prompt2
-    | model
-    | StrOutputParser()
-)
+    Args:
+        input_text (str): Input text to generate the security precautions.
+        service_description (str): Description of AWS services.
 
-print(chain2.invoke({"input": "Simple Web Application"}))
-
+    Returns:
+        str: Description of security precautions in markdown format.
+    """
+    model = ChatOpenAI(model="gpt-4-0125-preview", temperature=1.0, max_tokens=1000)
+    output_parser = StrOutputParser()
+    prompt = ChatPromptTemplate.from_template("""Must return markdown format.\n Please tell me what security precautions I need to take when using the services below.\n {input} """)
+    chain = ({"input": service_description} | prompt | model | output_parser)
+    return chain.invoke({"input": input_text})
 
 
 
