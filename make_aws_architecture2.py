@@ -9,7 +9,7 @@ from diagrams.aws.integration import SNS
 from diagrams.aws.engagement import SES
 
 
-with Diagram("AWS Static Web Hosting Architecture", show=False):
+with Diagram(filename="AWS Static Web Hosting Architecture", show=False):
     with Cluster("Static Hosting"):
         s3 = S3("S3 Bucket\nStatic Content")
         cloudFront = CloudFront("CloudFront\nCDN")
