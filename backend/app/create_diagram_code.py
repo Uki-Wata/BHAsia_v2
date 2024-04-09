@@ -2,7 +2,7 @@ from itertools import chain
 import json
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.output_parsers import JsonOutputParser
-from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.prompts import ChatPromptTemplate,PromptTemplate
 from langchain_openai import ChatOpenAI
 
 def generate_aws_service_description(input_text):
@@ -16,21 +16,20 @@ def generate_aws_service_description(input_text):
         tuple: A tuple containing the description of AWS services in markdown format
                and the result of json_chain.
     """
-    model = ChatOpenAI(model="gpt-3.5-turbo", temperature=1.0, max_tokens=1000)
+    model = ChatOpenAI(model="gpt-3.5-turbo", temperature=1.0, max_tokens=100)
     description_output_parser = StrOutputParser()
     description_prompt = ChatPromptTemplate.from_template("""Must return markdown format.\nPlease tell me more about the AWS services you should use when building {input}.\n""")
     description_chain = description_prompt | model | description_output_parser
     description = description_chain.invoke({"input": input_text})
 
     json_output_parser = JsonOutputParser()
-    json_prompt = ChatPromptTemplate(
+    json_prompt = PromptTemplate(
         template="Answer the user query.\n{format_instructions}\n{query}\n",
-        input_variables=["description"],
+        input_variables=["query"],
         partial_variables={"format_instructions": json_output_parser.get_format_instructions()}
     )
     json_chain = json_prompt | model | json_output_parser
-    json_result = json_chain.invoke({"description": description})
-
+    json_result = json_chain.invoke({"query": description})
     return description, json_result
 
 def generate_python_code(input_text):
